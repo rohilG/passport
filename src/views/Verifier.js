@@ -5,6 +5,7 @@ import QRCode from "react-qr-code";
 import { FcCancel, FcTouchscreenSmartphone } from "react-icons/fc";
 import { Checkmark } from "react-checkmark";
 import { padding } from "@mui/system";
+import axios from 'axios';
 
 class Verifier extends React.Component {
   constructor(props) {
@@ -16,9 +17,6 @@ class Verifier extends React.Component {
       mintDate: "",
       isValidAttendee: false,
     };
-
-    // this.handleChange = this.handleChange.bind(this);
-    // this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   verifyAttendee() {
@@ -30,35 +28,27 @@ class Verifier extends React.Component {
     //   appId: "ICYNGMsC7ru5DREZVwoWjX39UcYQo34HAsAIOQHo",
     //   serverUrl: "https://hxzbhq0gqxph.usemoralis.com:2053/server",
     // });
-    const nftport_headers = {
-      Authorization: nft_port_api_key,
-      //"Content-Type": "application/json",
-    };
-    const moralis_headers = {
-      "X-API-Key": moralis_api_key,
-      accept: "application/json",
-    };
+    const instance = axios.create({
+      baseURL: 'https://api.nftport.xyz/v0/',
+      headers: {
+        'Authorization': nft_port_api_key,
+        'Content-Type': "application/json"
+      }
+    })
 
-    fetch(
-      `https://api.nftport.xyz/v0/accounts/${this.state.creator_addr}?chain=ethereum&page_size=50`,
-      { nftport_headers }
+    const creator_held_verified_nfts = instance.get(
+      "accounts/0xbbaef1cf314755f3182fb8388061da3cf8724fee?chain=ethereum"
     )
-      .then((response) => {
-        if (!response.ok) {
-          console.log(response);
-          throw new Error("Network response not OK");
-        }
-        response.json();
-      })
-      .then((data) => {
-        const creator_held_nfts = data["nfts"]
-          .filter((nft) => nft["creator_address"] === this.state.creator_addr)
-          .map((nft) => [nft["contract_address"], nft["token_id"]]);
-      })
+      .then((response) => (
+        response.data.nfts
+          .filter((nft) => nft.creator_address === this.state.creator_addr)
+          .map((nft) => [nft.contract_address, nft.token_id])
+        )
+      )
       .catch((error) => {
-        console.log("caught", error);
-        return false;
+        console.log("caught: ", error);
       });
+    console.log(creator_held_verified_nfts);
 
     // fetch(
     //   `https://deep-index.moralis.io/api/v2/nft/${this.state.attendee_addr}/transfers?chain=eth&format=decimal&direction=from`,
@@ -110,16 +100,6 @@ class Verifier extends React.Component {
     // const transfersNFT = await Web3API.account.getNFTTransfers(options);
   }
 
-  // handleSubmit(e) {
-  //   alert("submitted: " + this.state.creator_addr);
-  //   this.setState({ dataCollectionStep: 2 });
-  //   e.preventDefault();
-  // }
-
-  // handleChange(event) {
-  //   this.setState({ creator_addr: event.target.value });
-  // }
-
   handleScan = (data) => {
     if (data) {
       console.log("data: ", data.split(":")[1]);
@@ -151,6 +131,11 @@ class Verifier extends React.Component {
     }
   };
 
+  // Debug only
+  componentDidMount() {
+    this.verifyAttendee();
+  }
+
   render() {
     const { dataCollectionStep, attendee_addr, creator_addr, isValidAttendee } =
       this.state;
@@ -169,6 +154,7 @@ class Verifier extends React.Component {
               delay={300}
               onScan={this.handleCreatorQRCode}
               style={{ width: "30%", height: "30%" }}
+              onError={ (err) => console.log(err) }
             />
           </div>
         )}
@@ -187,6 +173,7 @@ class Verifier extends React.Component {
             delay={300}
             onScan={this.handleScan}
             style={{ width: "50%", height: "50%" }}
+            onError={ (err) => console.log(err) }
           />
         )}
         */}
@@ -195,6 +182,7 @@ class Verifier extends React.Component {
           <QrReader
             delay={300}
             onScan={this.handleScan}
+            onError={ (err) => console.log(err) }
             style={{ width: "50%", height: "50%" }}
           />
         )}
