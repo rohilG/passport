@@ -5,7 +5,7 @@ import QRCode from "react-qr-code";
 import { FcCancel, FcTouchscreenSmartphone } from "react-icons/fc";
 import { Checkmark } from "react-checkmark";
 import { padding } from "@mui/system";
-import axios from 'axios';
+import axios from "axios";
 
 class Verifier extends React.Component {
   constructor(props) {
@@ -29,20 +29,20 @@ class Verifier extends React.Component {
     //   serverUrl: "https://hxzbhq0gqxph.usemoralis.com:2053/server",
     // });
     const nftport_instance = axios.create({
-      baseURL: 'https://api.nftport.xyz/v0/',
+      baseURL: "https://api.nftport.xyz/v0/",
       headers: {
-        'Authorization': nft_port_api_key,
-        'Content-Type': "application/json"
-      }
-    })
+        Authorization: nft_port_api_key,
+        "Content-Type": "application/json",
+      },
+    });
 
     const response = await nftport_instance.get(
       `accounts/${this.state.creator_addr}?chain=ethereum`
-    )
+    );
     if (!response.ok) {
       console.log("Network response not OK!");
     }
-    const creator_mnted_held_nfts = response.data.nfts
+    const creator_minted_held_nfts = response.data.nfts
       .filter((nft) => nft.creator_address === this.state.creator_addr)
       .map((nft) => [nft.contract_address, nft.token_id]);
     console.log(creator_minted_held_nfts);
@@ -130,9 +130,12 @@ class Verifier extends React.Component {
 
   // Debug only
   componentDidMount() {
-    this.setState({ creator_addr: "0xbbaef1cf314755f3182fb8388061da3cf8724fee" }, () => {
-      this.verifyAttendee();
-    });
+    this.setState(
+      { creator_addr: "0xbbaef1cf314755f3182fb8388061da3cf8724fee" },
+      () => {
+        this.verifyAttendee();
+      }
+    );
   }
 
   render() {
@@ -153,7 +156,7 @@ class Verifier extends React.Component {
               delay={300}
               onScan={this.handleCreatorQRCode}
               style={{ width: "30%", height: "30%" }}
-              onError={ (err) => console.log(err) }
+              onError={(err) => console.log(err)}
             />
           </div>
         )}
@@ -181,7 +184,7 @@ class Verifier extends React.Component {
           <QrReader
             delay={300}
             onScan={this.handleScan}
-            onError={ (err) => console.log(err) }
+            onError={(err) => console.log(err)}
             style={{ width: "50%", height: "50%" }}
           />
         )}
