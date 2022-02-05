@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
-import Verifier from "./views";
+import Verifier from "./views/Verifier";
 import Header from "./Header";
 import { Route, Switch, BrowserRouter as Router } from "react-router-dom";
 import AccountContext from "./AccountContext";
