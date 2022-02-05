@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
-import Verifier from "./views/Verifier";
 import Header from "./Header";
-import { Route, Switch, BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import AccountContext from "./AccountContext";
 import AuthModalContext from "./AuthModalContext";
 import AuthModal from "./AuthModal";
@@ -52,10 +51,6 @@ function App() {
           <Header />
           <AuthModal />
           <RoutingSwitch />
-          <Switch>
-            {/* <Route path="/" element={<Verifier />} /> */}
-            <Route path="verify" element={<Verifier />} />
-          </Switch>
         </Router>
       </AccountContext.Provider>
     </AuthModalContext.Provider>
