@@ -19,7 +19,7 @@ class Verifier extends React.Component {
     };
   }
 
-  verifyAttendee() {
+  async verifyAttendee() {
     const nft_port_api_key = "cb0130f1-d009-4f9d-9f5b-f9c6471ebf38";
     const moralis_api_key =
       "gxpDcsiOxjhx1SvF5ROBiMVeeGsQ9WtZSo9mDB1nWpNf9hnd4aOpzU91A2jABQi0";
@@ -28,7 +28,7 @@ class Verifier extends React.Component {
     //   appId: "ICYNGMsC7ru5DREZVwoWjX39UcYQo34HAsAIOQHo",
     //   serverUrl: "https://hxzbhq0gqxph.usemoralis.com:2053/server",
     // });
-    const instance = axios.create({
+    const nftport_instance = axios.create({
       baseURL: 'https://api.nftport.xyz/v0/',
       headers: {
         'Authorization': nft_port_api_key,
@@ -36,19 +36,16 @@ class Verifier extends React.Component {
       }
     })
 
-    const creator_held_verified_nfts = instance.get(
-      "accounts/0xbbaef1cf314755f3182fb8388061da3cf8724fee?chain=ethereum"
+    const response = await nftport_instance.get(
+      `accounts/${this.state.creator_addr}?chain=ethereum`
     )
-      .then((response) => (
-        response.data.nfts
-          .filter((nft) => nft.creator_address === this.state.creator_addr)
-          .map((nft) => [nft.contract_address, nft.token_id])
-        )
-      )
-      .catch((error) => {
-        console.log("caught: ", error);
-      });
-    console.log(creator_held_verified_nfts);
+    if (!response.ok) {
+      console.log("Network response not OK!");
+    }
+    const creator_mnted_held_nfts = response.data.nfts
+      .filter((nft) => nft.creator_address === this.state.creator_addr)
+      .map((nft) => [nft.contract_address, nft.token_id]);
+    console.log(creator_minted_held_nfts);
 
     // fetch(
     //   `https://deep-index.moralis.io/api/v2/nft/${this.state.attendee_addr}/transfers?chain=eth&format=decimal&direction=from`,
@@ -133,7 +130,9 @@ class Verifier extends React.Component {
 
   // Debug only
   componentDidMount() {
-    this.verifyAttendee();
+    this.setState({ creator_addr: "0xbbaef1cf314755f3182fb8388061da3cf8724fee" }, () => {
+      this.verifyAttendee();
+    });
   }
 
   render() {
