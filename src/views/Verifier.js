@@ -42,7 +42,7 @@ class Verifier extends React.Component {
     if (!response.ok) {
       console.log("Network response not OK!");
     }
-    const creator_mnted_held_nfts = response.data.nfts
+    const creator_minted_held_nfts = response.data.nfts
       .filter((nft) => nft.creator_address === this.state.creator_addr)
       .map((nft) => [nft.contract_address, nft.token_id]);
     console.log(creator_minted_held_nfts);
