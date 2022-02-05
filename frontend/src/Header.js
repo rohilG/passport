@@ -3,12 +3,15 @@ import {Link} from "react-router-dom";
 import Logo from './website-logo.jpg';
 import {useState, useContext} from 'react';
 import ClickOutHandler from 'react-clickout-handler';
+import {useHistory} from "react-router-dom";
 import AccountContext from './AccountContext';
 import AuthModalContext from './AuthModalContext';
 import Avatar from './avatar.png';
 
 function Header() {
     const [userDropdownVisbility, setUserDropdownVisbility] = useState('hidden')
+    
+    let history = useHistory();
 
     function toggleUserDropdown(){
       if (userDropdownVisbility === "hidden") {
@@ -16,6 +19,10 @@ function Header() {
       } else {
         setUserDropdownVisbility('hidden');
       }
+    }
+
+    function redirectToWallet() {
+      history.push('/attendee/wallet')
     }
 
     const authModal = useContext(AuthModalContext);
@@ -49,8 +56,8 @@ function Header() {
           {account.publicKey && (
             <>
             <div className='mx-2 hidden sm:block'>
-              {/* add on click */}
               <button 
+                onClick={() => redirectToWallet()}
                 className="mr-1 h-8 border border-blue-700 rounded-full px-3 text-sm font-bold text-blue-700 hover:bg-blue-700 hover:text-white">
                 My Wallet
               </button>

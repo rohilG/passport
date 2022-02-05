@@ -4,6 +4,7 @@ import AccountContext from './AccountContext';
 import {useState, useContext, useEffect} from 'react';
 import AuthModalContext from './AuthModalContext';
 import AuthModal from './AuthModal';
+import RoutingSwitch from './RoutingSwitch';
 
 function App() {
 
@@ -46,6 +47,7 @@ function App() {
         <Router>
           <Header />
           <AuthModal/>
+          <RoutingSwitch />
         </Router>
       </AccountContext.Provider>
     </AuthModalContext.Provider>
