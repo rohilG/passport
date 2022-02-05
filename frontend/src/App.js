@@ -1,13 +1,12 @@
 import Header from "./Header";
-import {Switch, Route, BrowserRouter as Router} from 'react-router-dom';
-import AccountContext from './AccountContext';
-import {useState, useContext, useEffect} from 'react';
-import AuthModalContext from './AuthModalContext';
-import AuthModal from './AuthModal';
+import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
+import AccountContext from "./AccountContext";
+import { useState, useContext, useEffect } from "react";
+import AuthModalContext from "./AuthModalContext";
+import AuthModal from "./AuthModal";
 
 function App() {
-
-  const [currentAccount, setCurrentAccount] = useState('');
+  const [currentAccount, setCurrentAccount] = useState("");
   const [showAuthModal, setShowAuthModal] = useState(false);
 
   const checkIfWalletIsConnected = async () => {
@@ -28,24 +27,27 @@ function App() {
         console.log("Found an authorized account:", account);
         setCurrentAccount(account);
       } else {
-        console.log("No authorized account found")
+        console.log("No authorized account found");
       }
     } catch (error) {
       console.log(error);
     }
-  }   
+  };
 
   useEffect(() => {
     checkIfWalletIsConnected();
-  }, [])
-
+  }, []);
 
   return (
-    <AuthModalContext.Provider value={{show:showAuthModal, setShow: setShowAuthModal}}>
-      <AccountContext.Provider value={{publicKey: currentAccount, setPublicKey: setCurrentAccount}}>
+    <AuthModalContext.Provider
+      value={{ show: showAuthModal, setShow: setShowAuthModal }}
+    >
+      <AccountContext.Provider
+        value={{ publicKey: currentAccount, setPublicKey: setCurrentAccount }}
+      >
         <Router>
           <Header />
-          <AuthModal/>
+          <AuthModal />
         </Router>
       </AccountContext.Provider>
     </AuthModalContext.Provider>
