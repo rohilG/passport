@@ -33,7 +33,9 @@ function Verifier() {
 
     const nfts_from_attendee = transfers_to_creator.result
       .filter((transaction) => transaction.from_address === attendee_address)
-      .map((transaction) => transaction.token_address + transaction.token_id);
+      .map(
+        (transaction) => transaction.token_address + " " + transaction.token_id
+      );
     console.log(nfts_from_attendee);
 
     let nfts_minted_by_creator = new Set();
@@ -46,7 +48,7 @@ function Verifier() {
       )
       .forEach((transaction) =>
         nfts_minted_by_creator.add(
-          transaction.token_address + transaction.token_id
+          transaction.token_address + " " + transaction.token_id
         )
       );
     console.log(nfts_minted_by_creator);
