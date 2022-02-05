@@ -1,4 +1,4 @@
-// import MetamaskLogo from "./metamask-fox.svg";
+import MetamaskLogo from "./metamask-fox.svg";
 import { useContext } from "react";
 import AuthModalContext from "./AuthModalContext";
 import ClickOutHandler from "react-clickout-handler";
@@ -54,7 +54,7 @@ function AuthModal() {
             style={{ borderRadius: ".3rem" }}
             onClick={connectWallet}
           >
-            {/* <img src={MetamaskLogo} alt="" className="w-8 h-8" /> */}
+            <img src={MetamaskLogo} alt="" className="w-8 h-8" />
             <div className="m-1">Log In</div>
           </button>
           <h5 className="text-center m-4">
