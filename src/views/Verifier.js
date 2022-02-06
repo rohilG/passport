@@ -11,11 +11,14 @@ import Base64 from "crypto-js/enc-base64";
 function Verifier() {
   const [attendee_address, set_attendee_address] = useState("");
   const [creator_address, set_creator_address] = useState("");
-  const [mint_date, set_mint_date] = useState("");
+  const [mint_date, set_mint_date] = useState(0);
   const [is_valid_attendee, set_is_valid_attendee] = useState(0);
   const { Moralis } = useMoralis();
 
   function moralisDateToUnixTimestamp(date_string) {
+    console.log(
+      moment(date_string.split(".")[0], "YYYY-MM-DDTHH:mm:ss").unix()
+    );
     return moment(date_string.split(".")[0], "YYYY-MM-DDTHH:mm:ss").unix();
   }
 
@@ -91,7 +94,8 @@ function Verifier() {
   function handleCreatorQRCode(data) {
     if (data) {
       set_creator_address(data.split(" ")[0]);
-      set_mint_date(data.split(" ")[1]);
+      // set_mint_date(data.split(" ")[1]);
+      set_mint_date(0);
     }
   }
 
