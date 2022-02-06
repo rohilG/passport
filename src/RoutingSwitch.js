@@ -5,7 +5,6 @@ import EventListings from "./EventListings";
 import TicketPurchase from "./TicketPurchase";
 import Verifier from "./views/Verifier";
 import GeneratePubKeyQR from "./views/GeneratePubKeyQR";
-import GenerateNFTs from "./views/GenerateNFTs";
 
 function RoutingSwitch() {
   let location = useLocation();
@@ -14,7 +13,6 @@ function RoutingSwitch() {
     <Switch location={location}>
       <Route exact path="/" component={EventListings} />
       <Route exact path="/artist/create/event" component={EventCreateModal} />
-      <Route exact path="/artist/generate" component={GenerateNFTs} />
       <Route exact path="/attendee/wallet" component={AttendeeNftListings} />
       <Route
         exact
