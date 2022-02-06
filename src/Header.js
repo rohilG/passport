@@ -33,6 +33,10 @@ function Header() {
     history.push("/attendee/wallet");
   }
 
+  function createEventForm() {
+    history.push('/artist/create/event')
+  }
+
   const authModal = useContext(AuthModalContext);
 
   const account = useContext(AccountContext);
@@ -80,6 +84,19 @@ function Header() {
                 className="mr-1 h-8 border border-blue-700 rounded-full px-3 text-sm font-bold text-blue-700 hover:bg-blue-700 hover:text-white"
               >
                 My Wallet
+              </button>
+            </div>
+          </>
+        )}
+
+        {account.publicKey && (
+          <>
+            <div className="mx-2 hidden sm:block">
+              <button
+                onClick={() => createEventForm()}
+                className="mr-1 h-8 border border-blue-700 rounded-full px-3 text-sm font-bold text-blue-700 hover:bg-blue-700 hover:text-white"
+              >
+                Create Event
               </button>
             </div>
           </>
