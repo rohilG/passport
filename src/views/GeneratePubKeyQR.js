@@ -12,17 +12,13 @@ class GeneratePubKeyQR extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      network: "polygon",
       qrString: "",
+      wallet: null,
     };
   }
 
-  componentDidMount() {
-    this.setState({ wallet: new sequence.Wallet(this.state.network) });
-  }
-
   connect = async (authorize) => {
-    const wallet = this.state.wallet;
+    const wallet = new sequence.Wallet("polygon");
 
     const connectDetails = await wallet.connect({
       app: "passport",
@@ -49,10 +45,12 @@ class GeneratePubKeyQR extends React.Component {
         if (!isValid) throw new Error("sig invalid");
       }
     }
+    this.setState({ wallet: wallet });
   };
 
   disconnect = () => {
     this.state.wallet.disconnect();
+    this.setState({ wallet: null, qrString: "" });
   };
 
   signMessage = async () => {
@@ -60,10 +58,14 @@ class GeneratePubKeyQR extends React.Component {
       const walletAddress = await this.state.wallet.getAddress();
       console.log("walletAddress", walletAddress);
       const mac = Base64.stringify(
-        hmacSHA512(walletAddress, process.env.REACT_APP_SECRET)
+        hmacSHA512(
+          walletAddress,
+          "$6$cOI4DEn.8we9k/.d$nP/Sizp33fW5SVyqVwm8CSYVPywHfkJuUnfQ1m/f20bGDLPcChz5AL/N0d2jqnsiJvl/xYxaV8rIfVpGkFmDM0"
+        )
       );
       this.setState({ qrString: mac + " " + walletAddress });
     } catch (err) {
+      this.setState({ wallet: null });
       console.log(err);
     }
   };
@@ -72,14 +74,33 @@ class GeneratePubKeyQR extends React.Component {
     const qrString = this.state.qrString;
     return (
       <div>
-        <button onClick={() => this.connect(true)}>Connect</button>
+        <div className="flex justify-center space-x-5">
+          <button
+            onClick={() => this.connect(true)}
+            className="mr-1 h-8 border border-blue-700 rounded-full px-3 text-sm font-bold text-blue-700 hover:bg-blue-700 hover:text-white disabled:opacity-50"
+            disabled={this.state.wallet}
+          >
+            Connect
+          </button>
+          <button
+            onClick={() => this.disconnect()}
+            className="mr-1 h-8 border border-blue-700 rounded-full px-3 text-sm font-bold text-blue-700 hover:bg-blue-700 hover:text-white disabled:opacity-50"
+            disabled={!this.state.wallet}
+          >
+            Disconnect
+          </button>
+          <button
+            onClick={() => this.signMessage()}
+            className="mr-1 h-8 border border-blue-700 rounded-full px-3 text-sm font-bold text-blue-700 hover:bg-blue-700 hover:text-white disabled:opacity-50"
+            disabled={!this.state.wallet || this.state.qrString !== ""}
+          >
+            Sign QR
+          </button>
+        </div>
         <br />
-        <button onClick={() => this.disconnect()}>Disconnect</button>
-        <br />
-        <button onClick={() => this.signMessage()}>Sign a message</button>
-        <br />
-
-        {qrString && <QRCode style={"padding: 20px 20px"} value={qrString} />}
+        <div className="flex justify-center">
+          {qrString && <QRCode value={qrString} />}
+        </div>
       </div>
     );
   }
