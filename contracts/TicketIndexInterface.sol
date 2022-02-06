@@ -15,7 +15,7 @@ interface TicketIndexInterface {
   function getEvent(EventId eventId) external view returns(EventData);
 
   // CONTEXT: ANY
-  // DESCRIPTION: List all events in system
+  // DESCRIPTION: List all events tracked by indexer
   // TODO: Add a filter parameter
   // RETURNS: {TicketId: TicketData, ...}
   function listEvents() external view returns(EventDataMap);
