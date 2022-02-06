@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import QrReader from "react-qr-reader";
-import QRCode from "react-qr-code";
 import { FcCancel } from "react-icons/fc";
 import { Checkmark } from "react-checkmark";
 import { useMoralis } from "react-moralis";
 import moment from "moment";
 import { Audio } from "react-loader-spinner";
+import hmacSHA512 from "crypto-js/hmac-sha512";
+import Base64 from "crypto-js/enc-base64";
 
 function Verifier() {
   const [attendee_address, set_attendee_address] = useState("");
@@ -63,8 +64,27 @@ function Verifier() {
 
   function handleScan(data) {
     if (data) {
-      console.log("data: ", data.split(":")[1]);
-      set_attendee_address(data.split(":")[1]);
+      const received_mac = data.split(" ")[0];
+      const attendee_address = data.split(" ")[1];
+
+      console.log(received_mac);
+      console.log(attendee_address);
+      console.log("heres the secret key", process.env.REACT_APP_SECRET);
+
+      const mac = Base64.stringify(
+        hmacSHA512(attendee_address, process.env.REACT_APP_SECRET)
+      );
+
+      console.log("got past the mac", mac);
+
+      if (mac === received_mac) {
+        set_attendee_address(attendee_address);
+      } else {
+        console.log(
+          "Unable to authenticate wallet address: ",
+          attendee_address
+        );
+      }
     }
   }
 
@@ -82,12 +102,14 @@ function Verifier() {
   useEffect(async () => {
     await timeout(1000);
     set_creator_address("0xeaf54391793cc80de696d72713d7518c6190bfe0");
-    await timeout(1000);
-    set_attendee_address("0x400e4468d737f91984c3f25dc6ac02793b736933");
+    // await timeout(1000);
+    // set_attendee_address("0x400e4468d737f91984c3f25dc6ac02793b736933");
   }, []);
+  // ===================================================
 
   useEffect(async () => {
     if (attendee_address !== "" && creator_address !== "") {
+      console.log("New attendee: ", attendee_address);
       const is_valid_attendee = await verifyAttendee();
       if (is_valid_attendee) {
         set_is_valid_attendee(1);
@@ -110,8 +132,6 @@ function Verifier() {
 
       {creator_address === "" && (
         <div style={{ padding: "20px 20px" }}>
-          <QRCode value="0x1494bb40e35DF00afce4dd01Fe67d5eB1eA6AED6 2020-10-29T15:03:54.838612" />
-          <br />
           <QrReader
             delay={300}
             onScan={handleCreatorQRCode}
@@ -121,7 +141,7 @@ function Verifier() {
         </div>
       )}
 
-      {creator_address !== "" && attendee_address === "" && (
+      {creator_address && attendee_address === "" && (
         <QrReader
           delay={300}
           onScan={handleScan}

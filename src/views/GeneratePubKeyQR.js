@@ -3,6 +3,8 @@ import { sequence } from "0xsequence";
 import { configureLogger } from "@0xsequence/utils";
 import { ETHAuth } from "@0xsequence/ethauth";
 import QRCode from "react-qr-code";
+import hmacSHA512 from "crypto-js/hmac-sha512";
+import Base64 from "crypto-js/enc-base64";
 
 configureLogger({ logLevel: "ERROR" });
 
@@ -54,28 +56,16 @@ class GeneratePubKeyQR extends React.Component {
   };
 
   signMessage = async () => {
-    const wallet = this.state.wallet;
-    const walletAddress = await wallet.getAddress();
-    const signer = wallet.getSigner();
-    const chainID = await signer.getChainId();
-
-    console.log("walletAddress", walletAddress);
-    console.log("chainID", chainID);
-
-    // sign
-    const sig = await signer.signMessage(walletAddress);
-
-    this.setState({ qrString: sig + " " + walletAddress + " " + chainID });
-
-    // validate
-    // const isValid = await wallet.utils.isValidMessageSignature(
-    //   walletAddress,
-    //   walletAddress,
-    //   sig,
-    //   await signer.getChainId()
-    // );
-    // console.log("isValid?", isValid);
-    // if (!isValid) throw new Error("sig invalid");
+    try {
+      const walletAddress = await this.state.wallet.getAddress();
+      console.log("walletAddress", walletAddress);
+      const mac = Base64.stringify(
+        hmacSHA512(walletAddress, process.env.REACT_APP_SECRET)
+      );
+      this.setState({ qrString: mac + " " + walletAddress });
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   render() {
@@ -83,10 +73,13 @@ class GeneratePubKeyQR extends React.Component {
     return (
       <div>
         <button onClick={() => this.connect(true)}>Connect</button>
+        <br />
         <button onClick={() => this.disconnect()}>Disconnect</button>
+        <br />
         <button onClick={() => this.signMessage()}>Sign a message</button>
+        <br />
 
-        {qrString && <QRCode value={qrString} />}
+        {qrString && <QRCode style={"padding: 20px 20px"} value={qrString} />}
       </div>
     );
   }
