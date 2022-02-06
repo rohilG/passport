@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import Header from "./Header";
-import { Route, Switch, BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import AccountContext from "./AccountContext";
 import AuthModalContext from "./AuthModalContext";
 import AuthModal from "./AuthModal";
