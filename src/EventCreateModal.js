@@ -13,6 +13,10 @@ function EventCreateModal() {
   const [numTickets, setNumTickets] = useState("");
 
   async function createNFTs() {
+    const serverUrl = "https://ajly5xpy5zyk.usemoralis.com:2053/server";
+    const appId = "iMJDo8q2soXtclYVOp5Qi7Y7ag94rqSo27uM9F22";
+    Moralis.start({ serverUrl, appId });
+
     console.log("about to create some nfts");
     console.log("heres the values we're going to work with:");
     console.log("selectedFile:", selectedFile);
@@ -21,19 +25,31 @@ function EventCreateModal() {
     console.log("dateTime", dateTime);
     console.log("numTickets", numTickets);
 
-    const options = {
-      abi: [
-        {
-          path: "website-logo.jpg",
-          content:
-            "iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAApgAAAKYB3X3",
-        },
-      ],
+    // encode the file using the FileReader API
+
+    const reader = new FileReader();
+    var base64String;
+    var moralisFile;
+
+    // Upload the NFT image to IPFS
+    reader.onloadend = async () => {
+      // use a regex to remove data url part
+      base64String = reader.result.replace("data:", "").replace(/^.+,/, "");
+
+      const options = {
+        abi: [
+          {
+            path: "",
+            content: base64String,
+          },
+        ],
+      };
+
+      const path = await Moralis.Web3API.storage.uploadFolder(options);
+
+      console.log("path", path);
     };
-
-    const path = await Moralis.Web3API.storage.uploadFolder(options);
-
-    console.log("path", path);
+    reader.readAsDataURL(selectedFile);
   }
 
   return (
