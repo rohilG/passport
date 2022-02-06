@@ -5,11 +5,19 @@ import DateTimePicker from "react-datetime-picker";
 import { useMoralis } from "react-moralis";
 
 function EventCreateModal() {
-  const [value, setValue] = useState(new Date());
   const { Moralis } = useMoralis();
+  const [eventName, setEventName] = useState("");
+  const [location, setLocation] = useState("");
+  const [dateTime, setDateTime] = useState(new Date());
+  const [numTickets, setNumTickets] = useState("");
 
   async function createNFTs() {
     console.log("about to create some nfts");
+    console.log("heres the values we're going to work with:");
+    console.log("eventName", eventName);
+    console.log("location", location);
+    console.log("dateTime", dateTime);
+    console.log("numTickets", numTickets);
 
     const options = {
       abi: [
@@ -69,6 +77,8 @@ function EventCreateModal() {
             id="nftname"
             type="text"
             placeholder="Event Name"
+            value={eventName}
+            onChange={(e) => setEventName(e.target.value)}
           />
         </div>
 
@@ -84,6 +94,8 @@ function EventCreateModal() {
             id="venue"
             type="text"
             placeholder="Venue Location"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
           />
         </div>
 
@@ -96,8 +108,8 @@ function EventCreateModal() {
           </label>
           <DateTimePicker
             className="shadow appearance-none border rounded w-full mt-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            onChange={setValue}
-            value={value}
+            value={dateTime}
+            onChange={setDateTime}
           />
         </div>
 
@@ -113,6 +125,8 @@ function EventCreateModal() {
             id="ticketcap"
             type="number"
             placeholder="8"
+            value={numTickets}
+            onChange={(e) => setNumTickets(e.target.value)}
           />
         </div>
 
