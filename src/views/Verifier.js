@@ -95,6 +95,11 @@ function Verifier() {
     }
   }
 
+  function reset_attendee() {
+    set_attendee_address("");
+    set_is_valid_attendee(0);
+  }
+
   // Testcase enabled currently with hardcoded addresses
   function timeout(delay) {
     return new Promise((res) => setTimeout(res, delay));
@@ -126,41 +131,60 @@ function Verifier() {
   }, [creator_address]);
 
   return (
-    <div className="flex justify-center" style={{ height: "80vh" }}>
-      {/* We generate this only when the artist mints their NFTs, and these QR codes are sent to each verifier */}
-      {/* This contains: creator_address + " " + mint_date */}
-
-      {creator_address === "" && (
-        <QrReader
-          delay={300}
-          onScan={handleCreatorQRCode}
-          onError={(err) => console.log(err)}
-          style={{ width: "40%", height: "40%" }}
-          className="self-center"
-        />
-      )}
-
+    <div className="justify-center">
       {creator_address && attendee_address === "" && (
-        <QrReader
-          delay={300}
-          onScan={handleScan}
-          onError={(err) => console.log(err)}
-          style={{ width: "40%", height: "40%" }}
-          className="self-center"
-        />
-      )}
-
-      {attendee_address !== "" && is_valid_attendee === 0 && (
-        <div className="self-center">
-          <Audio color="#32CD32" height={80} width={80} />
+        <div>
+          <h1 className="text-3xl text-center text-blue-700 text-bold">
+            Scan Attendee QR
+          </h1>
         </div>
       )}
+      {creator_address === "" && (
+        <div>
+          <h1 className="text-3xl text-center text-blue-700 text-bold">
+            Scan Event QR
+          </h1>
+        </div>
+      )}
+      <br />
+      <div className="flex justify-center" style={{ height: "15vh" }}>
+        {/* We generate this only when the artist mints their NFTs, and these QR codes are sent to each verifier */}
+        {/* This contains: creator_address + " " + mint_date */}
 
-      {is_valid_attendee === -1 && <FcCancel />}
+        {creator_address === "" && (
+          <QrReader
+            delay={300}
+            onScan={handleCreatorQRCode}
+            onError={(err) => console.log(err)}
+            style={{ width: "40%", height: "40%" }}
+          />
+        )}
 
-      {is_valid_attendee === 1 && (
-        <div className="self-center">
-          <Checkmark size="xxLarge" />
+        {creator_address && attendee_address === "" && (
+          <QrReader
+            delay={300}
+            onScan={handleScan}
+            onError={(err) => console.log(err)}
+            style={{ width: "40%", height: "40%" }}
+          />
+        )}
+
+        {attendee_address !== "" && is_valid_attendee === 0 && (
+          <Audio color="#32CD32" height={80} width={80} />
+        )}
+
+        {is_valid_attendee === -1 && <FcCancel size={100} />}
+
+        {is_valid_attendee === 1 && <Checkmark size="xxLarge" />}
+      </div>
+      {is_valid_attendee !== 0 && (
+        <div className="flex justify-center">
+          <button
+            onClick={() => reset_attendee()}
+            className="mr-1 h-8 border border-blue-700 rounded-full px-3 text-sm font-bold text-blue-700 hover:bg-blue-700 hover:text-white"
+          >
+            Scan Next Attendee
+          </button>
         </div>
       )}
     </div>
