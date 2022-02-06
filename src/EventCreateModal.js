@@ -36,7 +36,7 @@ function EventCreateModal() {
       // use a regex to remove data url part
       base64String = reader.result.replace("data:", "").replace(/^.+,/, "");
 
-      const options = {
+      var options = {
         abi: [
           {
             path: "",
@@ -45,9 +45,28 @@ function EventCreateModal() {
         ],
       };
 
-      const path = await Moralis.Web3API.storage.uploadFolder(options);
+      var path = await Moralis.Web3API.storage.uploadFolder(options);
 
-      console.log("path", path);
+      console.log("image path", path);
+
+      const content = {
+        image: path,
+        name: eventName,
+        description: location + "_" + dateTime,
+      };
+
+      options = {
+        abi: [
+          {
+            path: "",
+            content: content,
+          },
+        ],
+      };
+
+      var path = await Moralis.Web3API.storage.uploadFolder(options);
+
+      console.log("metadata", path);
     };
     reader.readAsDataURL(selectedFile);
   }
