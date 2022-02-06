@@ -1,45 +1,54 @@
 import AccountContext from './AccountContext';
 import {useState, useContext, useEffect} from 'react';
-import axios from 'axios';
+import { useMoralis, useMoralisWeb3Api } from "react-moralis";
+import NftCard from './NftCard';
 
 function AttendeeNftListings() {
     
 
     const account = useContext(AccountContext);
-    const axios = require('axios');
 
-    const nft_port_api_key = process.env.REACT_APP_NFT_PORT_API_KEY;
-    console.log(nft_port_api_key);
+    // const nft_port_api_key = process.env.REACT_APP_NFT_PORT_API_KEY;
+    // console.log(nft_port_api_key);
 
+    let count = 0;
     const [nftList, setNftList] = useState([]);
+    const {isAuthenticated, Moralis} = useMoralis();
+    const verification = {appId: "ICYNGMsC7ru5DREZVwoWjX39UcYQo34HAsAIOQHo", serverUrl: "https://hxzbhq0gqxph.usemoralis.com:2053/server"};
 
-    async function fetchNftForAddress () {
-        const options = {
-            method: 'GET',
-            url: `https://api.nftport.xyz/v0/accounts/${account.publicKey}`,
-            params: {chain: 'polygon'},
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: nft_port_api_key,
-            }
-          };
-          
-          axios.request(options).then(function (response) {
-            setNftList(response.data.nfts);
-          }).catch(function (error) {
-            console.error(error);
-          });
-        
+    async function fetchNftForAddress() {
+      Moralis.start(verification);
+      const chain = 'polygon'
+      const params = { chain: chain, address: account.publicKey};
+      console.log("aids");
+
+      const nfts = await Moralis.Web3API.account.getNFTs(params);
+      setNftList(nfts.result);
     }
 
+    // fixURL = (url) => {
+    //   if (url.startsWith("ipfs")) {
+    //     return "https://ipfs.moralis.io:2053/ipfs/" + url.split("ipfs://ipfs/")[1];
+    //   } else {
+    //     return url + "?format=json";
+    //   }
+    // }
+
     useEffect(() => {
-        fetchNftForAddress();
-        console.log(nftList, "nftList");
-    }, []);
+      fetchNftForAddress();
+    }, [account.publicKey]);
 
     return (
         <div>
-            List all Nfts {account.publicKey}
+          {nftList.map((nftData, id) => (
+              <div className="flex flex-wrap ">
+                <NftCard
+                key={id}
+                nftData={nftData}
+                title={"Random Name"}
+              />
+              </div>          
+          ))}
         </div>
     );
 }

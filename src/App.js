@@ -6,6 +6,8 @@ import AccountContext from "./AccountContext";
 import AuthModalContext from "./AuthModalContext";
 import AuthModal from "./AuthModal";
 import RoutingSwitch from "./RoutingSwitch";
+import { MoralisProvider } from "react-moralis";
+
 
 function App() {
   const [currentAccount, setCurrentAccount] = useState("");
@@ -41,19 +43,21 @@ function App() {
   }, []);
 
   return (
-    <AuthModalContext.Provider
-      value={{ show: showAuthModal, setShow: setShowAuthModal }}
-    >
-      <AccountContext.Provider
-        value={{ publicKey: currentAccount, setPublicKey: setCurrentAccount }}
+    <MoralisProvider appId="ICYNGMsC7ru5DREZVwoWjX39UcYQo34HAsAIOQHo" serverUrl="https://hxzbhq0gqxph.usemoralis.com:2053/server">
+      <AuthModalContext.Provider
+        value={{ show: showAuthModal, setShow: setShowAuthModal }}
       >
-        <Router>
-          <Header />
-          <AuthModal />
-          <RoutingSwitch />
-        </Router>
-      </AccountContext.Provider>
-    </AuthModalContext.Provider>
+        <AccountContext.Provider
+          value={{ publicKey: currentAccount, setPublicKey: setCurrentAccount }}
+        >
+          <Router>
+            <Header />
+            <AuthModal />
+            <RoutingSwitch />
+          </Router>
+        </AccountContext.Provider>
+      </AuthModalContext.Provider>
+    </MoralisProvider>
   );
 }
 
