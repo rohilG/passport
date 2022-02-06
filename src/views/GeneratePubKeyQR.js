@@ -17,10 +17,6 @@ class GeneratePubKeyQR extends React.Component {
     };
   }
 
-  // componentDidMount() {
-  //   this.setState({ wallet: new sequence.Wallet(this.state.network) });
-  // }
-
   connect = async (authorize) => {
     const wallet = new sequence.Wallet("polygon");
 
