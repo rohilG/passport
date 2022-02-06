@@ -73,10 +73,13 @@ class GeneratePubKeyQR extends React.Component {
     return (
       <div>
         <button onClick={() => this.connect(true)}>Connect</button>
+        <br />
         <button onClick={() => this.disconnect()}>Disconnect</button>
+        <br />
         <button onClick={() => this.signMessage()}>Sign a message</button>
+        <br />
 
-        {qrString && <QRCode value={qrString} />}
+        {qrString && <QRCode style={"padding: 20px 20px"} value={qrString} />}
       </div>
     );
   }

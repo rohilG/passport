@@ -64,11 +64,20 @@ function Verifier() {
 
   function handleScan(data) {
     if (data) {
-      const attendee_address = data.split(" ")[1];
       const received_mac = data.split(" ")[0];
+      const attendee_address = data.split(" ")[1];
+
+      console.log(received_mac);
+      console.log(attendee_address);
+
+      console.log("heres the secret key", process.env.REACT_APP_SECRET);
+
       const mac = Base64.stringify(
         hmacSHA512(attendee_address, process.env.REACT_APP_SECRET)
       );
+
+      console.log("got past the mac", mac);
+
       if (mac === received_mac) {
         set_attendee_address(attendee_address);
       } else {
@@ -133,7 +142,7 @@ function Verifier() {
         </div>
       )}
 
-      {creator_address !== "" && attendee_address === "" && (
+      {creator_address && attendee_address === "" && (
         <QrReader
           delay={300}
           onScan={handleScan}
