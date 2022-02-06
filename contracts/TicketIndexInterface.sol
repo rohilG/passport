@@ -15,6 +15,12 @@ interface TicketIndexInterface {
   function getEvent(EventId eventId) external view returns(EventData);
 
   // CONTEXT: ANY
+  // DESCRIPTION: List all events in system
+  // TODO: Add a filter parameter
+  // RETURNS: {TicketId: TicketData, ...}
+  function listEvents() external view returns(EventDataMap);
+
+  // CONTEXT: ANY
   // DESCRIPTION: List all events created by organizer
   // RETURNS: {TicketId: TicketData, ...}
   function listEventsForOrganizer(address organizerAddress) external view returns(EventDataMap);
@@ -49,7 +55,8 @@ interface TicketIndexInterface {
     address organizerAddress; // Minter of ticket NFTs for event
     uint256 numMintedTickets; // Number of ticket NFTs minted for event
     uint256 startDatetime; // Datetime of the event start time - see https://ethereum.stackexchange.com/questions/32173/how-to-handle-dates-in-solidity-and-web3
-    // Other data columns added here
+    string venueName;
+    string eventName;
   }
   struct EventDataMap is mapping(EventId => EventData);
 
@@ -61,7 +68,7 @@ interface TicketIndexInterface {
   struct TicketData {
     EventData eventData; // Data for the event the ticket belongs to
     address attendeeAddress; // Owner of the ticket
-    string floorPrice; // Minimum selling price, set by NFT's owner
+    string price; // Price of ticket, set by NFT's owner
   }
   struct TicketDataMap is mapping(TicketId => TicketData);
 }
