@@ -69,7 +69,6 @@ function Verifier() {
 
       console.log(received_mac);
       console.log(attendee_address);
-
       console.log("heres the secret key", process.env.REACT_APP_SECRET);
 
       const mac = Base64.stringify(
