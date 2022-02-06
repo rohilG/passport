@@ -5,32 +5,33 @@ import "hardhat/console.sol";
 
 interface TicketIndexInterface {
   // CONTEXT: ANY
-  // Get details for ticket with ticketId
-  // Returns: TicketData
+  // DESCRIPTION: Get details for ticket with ticketId
+  // RETURNS: TicketData
   function getTicket(TicketId ticketId) external view returns(TicketData);
 
   // CONTEXT: ANY
-  // Get details for event with eventId
-  // Returns: EventData
+  // DESCRIPTION: Get details for event with eventId
+  // RETURNS: EventData
   function getEvent(EventId eventId) external view returns(EventData);
 
   // CONTEXT: ANY
-  // List all events created by organizer
-  // Returns: {TicketId: TicketData, ...}
+  // DESCRIPTION: List all events created by organizer
+  // RETURNS: {TicketId: TicketData, ...}
   function listEventsForOrganizer(address organizerAddress) external view returns(EventDataMap);
 
   // CONTEXT: ATTENDEE
-  // List all tickets owned by calling attendee
-  // Returns: {TicketId: TicketData, ...}
+  // DESCRIPTION: List all tickets owned by calling attendee
+  // RETURNS: {TicketId: TicketData, ...}
   function listTicketsForCaller() external view returns(TicketDataMap);
 
   // CONTEXT: ORGANIZER
-  // List all events created by calling organizer
-  // Returns: {EventId: EventData, ...}
+  // DESCRIPTION: List all events created by calling organizer
+  // RETURNS: {EventId: EventData, ...}
   function listEventsForCaller() external view returns(EventDataMap);
 
   // CONTEXT: ORGANIZER
-  // Add event to index corresponding with calling organizer
+  // DESCRIPTION: Add event to index corresponding with calling organizer
+  // RETURNS: EventId
   function createEventForCaller(EventData eventData) external returns(EventId);
 
   // CONTEXT: ORGANIZER
