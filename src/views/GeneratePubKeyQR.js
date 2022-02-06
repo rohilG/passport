@@ -98,9 +98,19 @@ class GeneratePubKeyQR extends React.Component {
           </button>
         </div>
         <br />
+        <h1 className="text-xl mb-3 text-center text-blue-700 text-bold">
+          Send 🎫 to organizer via Sequence Wallet
+        </h1>
+        <br />
         <div className="flex justify-center">
           {qrString && <QRCode value={qrString} />}
         </div>
+        <br />
+        {qrString && (
+          <h1 className="text-xl mb-3 text-center text-blue-700 text-bold">
+            Here's your unique QR code to access the event 🎉
+          </h1>
+        )}
       </div>
     );
   }
