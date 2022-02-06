@@ -28,15 +28,15 @@ function EventCreateModal() {
     // encode the file using the FileReader API
 
     const reader = new FileReader();
-    var base64String;
-    var moralisFile;
+    let base64String;
+    let moralisFile;
 
     // Upload the NFT image to IPFS
     reader.onloadend = async () => {
       // use a regex to remove data url part
       base64String = reader.result.replace("data:", "").replace(/^.+,/, "");
 
-      var options = {
+      let options = {
         abi: [
           {
             path: "",
@@ -45,7 +45,7 @@ function EventCreateModal() {
         ],
       };
 
-      var path = await Moralis.Web3API.storage.uploadFolder(options);
+      let path = await Moralis.Web3API.storage.uploadFolder(options);
 
       console.log("image path", path);
 
@@ -64,7 +64,7 @@ function EventCreateModal() {
         ],
       };
 
-      var path = await Moralis.Web3API.storage.uploadFolder(options);
+      let path = await Moralis.Web3API.storage.uploadFolder(options);
 
       console.log("metadata", path);
     };
