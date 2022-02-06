@@ -7,13 +7,13 @@ module.exports = {
         auth_modal: {
           DEFAULT: "rgb(255, 255, 255)",
         },
-        nft_card:{
+        nft_card: {
           DEFAULT: "#303339",
-          info: '#e4e8eb',
+          info: "#e4e8eb",
           collection_name: "#8a939b",
           price_tag: "#8a939b",
         },
-        ticket_purchase:{
+        ticket_purchase: {
           DEFAULT: "rgb(0, 21, 255)",
           owned_by: "#8a939b",
           accent: "#2081e2",
@@ -26,7 +26,9 @@ module.exports = {
     },
   },
   variants: {
-    extend: {},
+    extend: {
+      opacity: ["disabled"],
+    },
   },
   plugins: [],
 };

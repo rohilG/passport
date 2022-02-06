@@ -12,11 +12,15 @@ function RoutingSwitch() {
   return (
     <Switch location={location}>
       <Route exact path="/" component={EventListings} />
-      <Route exact path="/attendee/wallet" component={AttendeeNftListings} />
-      <Route exact path="/attendee/tickets/:event_id" component={TicketPurchase} />
       <Route exact path="/artist/create/event" component={EventCreateModal} />
-      <Route exact path="/verify" component={Verifier} />
+      <Route exact path="/attendee/wallet" component={AttendeeNftListings} />
+      <Route
+        exact
+        path="/attendee/tickets/:event_id"
+        component={TicketPurchase}
+      />
       <Route exact path="/attendee/qr" component={GeneratePubKeyQR} />
+      <Route exact path="/verify" component={Verifier} />
     </Switch>
   );
 }
