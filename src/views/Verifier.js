@@ -102,8 +102,8 @@ function Verifier() {
   useEffect(async () => {
     await timeout(1000);
     set_creator_address("0xeaf54391793cc80de696d72713d7518c6190bfe0");
-    // await timeout(1000);
-    // set_attendee_address("0x400e4468d737f91984c3f25dc6ac02793b736933");
+    await timeout(1000);
+    set_attendee_address("0x400e4468d737f91984c3f25dc6ac02793b736933");
   }, []);
   // ===================================================
 
@@ -126,19 +126,18 @@ function Verifier() {
   }, [creator_address]);
 
   return (
-    <div>
+    <div className="flex justify-center" style={{ height: "80vh" }}>
       {/* We generate this only when the artist mints their NFTs, and these QR codes are sent to each verifier */}
       {/* This contains: creator_address + " " + mint_date */}
 
       {creator_address === "" && (
-        <div style={{ padding: "20px 20px" }}>
-          <QrReader
-            delay={300}
-            onScan={handleCreatorQRCode}
-            style={{ width: "30%", height: "30%" }}
-            onError={(err) => console.log(err)}
-          />
-        </div>
+        <QrReader
+          delay={300}
+          onScan={handleCreatorQRCode}
+          onError={(err) => console.log(err)}
+          style={{ width: "40%", height: "40%" }}
+          className="self-center"
+        />
       )}
 
       {creator_address && attendee_address === "" && (
@@ -146,17 +145,24 @@ function Verifier() {
           delay={300}
           onScan={handleScan}
           onError={(err) => console.log(err)}
-          style={{ width: "50%", height: "50%" }}
+          style={{ width: "40%", height: "40%" }}
+          className="self-center"
         />
       )}
 
       {attendee_address !== "" && is_valid_attendee === 0 && (
-        <Audio color="#00BFFF" height={80} width={80} />
+        <div className="self-center">
+          <Audio color="#32CD32" height={80} width={80} />
+        </div>
       )}
 
       {is_valid_attendee === -1 && <FcCancel />}
 
-      {is_valid_attendee === 1 && <Checkmark />}
+      {is_valid_attendee === 1 && (
+        <div className="self-center">
+          <Checkmark size="xxLarge" />
+        </div>
+      )}
     </div>
   );
 }
