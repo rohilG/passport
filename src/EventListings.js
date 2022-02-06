@@ -3,7 +3,7 @@ import Venue from "./venue.jpg";
 
 function EventListings() {
     return (
-        <div class="w-full border-r justify-center pl-20 pr-20"  >
+        <div class="w-full border-r justify-center pl-20 pr-20 rounded-lg shadow-xl"  >
             <div class="px-3">
                 <div class="mt-2 rounded-lg ">
                     <div class="text-lg font-extrabold text-gray-900 p-3">Events you might like</div>
