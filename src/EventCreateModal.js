@@ -6,6 +6,7 @@ import { useMoralis } from "react-moralis";
 
 function EventCreateModal() {
   const { Moralis } = useMoralis();
+  const [selectedFile, setSelectedFile] = useState(null);
   const [eventName, setEventName] = useState("");
   const [location, setLocation] = useState("");
   const [dateTime, setDateTime] = useState(new Date());
@@ -14,6 +15,7 @@ function EventCreateModal() {
   async function createNFTs() {
     console.log("about to create some nfts");
     console.log("heres the values we're going to work with:");
+    console.log("selectedFile:", selectedFile);
     console.log("eventName", eventName);
     console.log("location", location);
     console.log("dateTime", dateTime);
@@ -62,6 +64,7 @@ function EventCreateModal() {
                     focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
             type="file"
             id="formFile"
+            onChange={(e) => setSelectedFile(e.target.files[0])}
           />
         </div>
 
