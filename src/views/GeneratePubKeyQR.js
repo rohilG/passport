@@ -54,7 +54,7 @@ class GeneratePubKeyQR extends React.Component {
 
   disconnect = () => {
     this.state.wallet.disconnect();
-    this.setState({ wallet: null });
+    this.setState({ wallet: null, qrString: "" });
   };
 
   signMessage = async () => {
