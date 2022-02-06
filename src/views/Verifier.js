@@ -94,8 +94,8 @@ function Verifier() {
   function handleCreatorQRCode(data) {
     if (data) {
       set_creator_address(data.split(" ")[0]);
-      // set_mint_date(data.split(" ")[1]);
-      set_mint_date(0);
+      set_mint_date(moralisDateToUnixTimestamp(data.split(" ")[1]));
+      // set_mint_date(0);
     }
   }
 
