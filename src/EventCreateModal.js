@@ -1,12 +1,15 @@
 import React from "react";
 // import TextField from "@mui/material/TextField";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import DateTimePicker from "react-datetime-picker";
 import { useMoralis } from "react-moralis";
 import { sequence } from "0xsequence";
 import { ETHAuth } from "@0xsequence/ethauth";
 import { ethers } from "ethers";
 import abi from "./utils/BulkMint.json";
+import AccountContext from "./AccountContext";
+import moment from "moment";
+import QRCode from "react-qr-code";
 
 function EventCreateModal() {
   const { Moralis } = useMoralis();
@@ -15,6 +18,8 @@ function EventCreateModal() {
   const [location, setLocation] = useState("");
   const [dateTime, setDateTime] = useState(new Date());
   const [numTickets, setNumTickets] = useState("");
+  const [eventQR, setEventQR] = useState("");
+  const account = useContext(AccountContext);
   // const [ticketPrice, setTicketPrice] = useState(0);
 
   // This function will be called numTickets time
@@ -63,6 +68,15 @@ function EventCreateModal() {
   }
 
   async function createNFTs() {
+    if (!account.publicKey) {
+      alert("Log In with MetaMask!");
+      return;
+    }
+    const mintDate = moment().format("YYYY-MM-DDTHH:mm:ss");
+    const qrString = account.publicKey + " " + mintDate;
+    setEventQR(qrString);
+    console.log(qrString);
+
     const serverUrl = "https://ajly5xpy5zyk.usemoralis.com:2053/server";
     const appId = "iMJDo8q2soXtclYVOp5Qi7Y7ag94rqSo27uM9F22";
     Moralis.start({ serverUrl, appId });
@@ -246,6 +260,9 @@ function EventCreateModal() {
           >
             Create Event
           </button>
+        </div>
+        <div className="flex justify-left py-5">
+          {eventQR && <QRCode value={eventQR} />}
         </div>
       </div>
     </div>

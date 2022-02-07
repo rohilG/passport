@@ -1,11 +1,8 @@
 import {
   SearchIcon,
   ChevronDownIcon,
-  ChatIcon,
   UserIcon,
-  BellIcon,
   LoginIcon,
-  PlusIcon,
 } from "@heroicons/react/outline";
 import { Link } from "react-router-dom";
 import Logo from "./website-logo.jpg";
@@ -29,12 +26,16 @@ function Header() {
     }
   }
 
-  function redirectToWallet() {
-    history.push("/attendee/wallet");
+  function redirectToQR() {
+    history.push("/attendee/qr");
+  }
+
+  function redirectToVerify() {
+    history.push("/verify");
   }
 
   function createEventForm() {
-    history.push('/artist/create/event')
+    history.push("/artist/create/event");
   }
 
   const authModal = useContext(AuthModalContext);
@@ -71,23 +72,19 @@ function Header() {
               onClick={() => authModal.setShow(true)}
               className="mr-1 h-8 border border-blue-700 rounded-full px-3 text-sm font-bold text-blue-700 hover:bg-blue-700 hover:text-white"
             >
-              Log In
+              Organizer Log In
             </button>
           </div>
         )}
 
-        {account.publicKey && (
-          <>
-            <div className="mx-2 hidden sm:block">
-              <button
-                onClick={() => redirectToWallet()}
-                className="mr-1 h-8 border border-blue-700 rounded-full px-3 text-sm font-bold text-blue-700 hover:bg-blue-700 hover:text-white"
-              >
-                My Wallet
-              </button>
-            </div>
-          </>
-        )}
+        <div className="mx-2 hidden sm:block">
+          <button
+            onClick={() => redirectToQR()}
+            className="mr-1 h-8 border border-blue-700 rounded-full px-3 text-sm font-bold text-blue-700 hover:bg-blue-700 hover:text-white"
+          >
+            Access Event
+          </button>
+        </div>
 
         {account.publicKey && (
           <>
@@ -101,6 +98,14 @@ function Header() {
             </div>
           </>
         )}
+        <div className="mx-2 hidden sm:block">
+          <button
+            onClick={() => redirectToVerify()}
+            className="mr-1 h-8 border border-blue-700 rounded-full px-3 text-sm font-bold text-blue-700 hover:bg-blue-700 hover:text-white"
+          >
+            Verify Tickets
+          </button>
+        </div>
 
         <ClickOutHandler onClickOut={() => setUserDropdownVisbility("hidden")}>
           <button
