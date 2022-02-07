@@ -3,6 +3,10 @@ import React from "react";
 import { useState } from "react";
 import DateTimePicker from "react-datetime-picker";
 import { useMoralis } from "react-moralis";
+import { sequence } from "0xsequence";
+import { ETHAuth } from "@0xsequence/ethauth";
+import { ethers } from "ethers";
+import abi from "./utils/BulkMint.json";
 
 function EventCreateModal() {
   const { Moralis } = useMoralis();
@@ -11,6 +15,52 @@ function EventCreateModal() {
   const [location, setLocation] = useState("");
   const [dateTime, setDateTime] = useState(new Date());
   const [numTickets, setNumTickets] = useState("");
+  // const [ticketPrice, setTicketPrice] = useState(0);
+
+  // This function will be called numTickets time
+  // TODO: Add ipfsHashs into params and pass it into ERC1155 contract
+
+  // Mints one NFT
+
+  const contractABI = abi.abi;
+
+  async function mint(metaDataIPFSHash) {
+    try {
+      console.log("in mint");
+
+      const { ethereum } = window;
+
+      if (ethereum) {
+        const contractAddress = "0x544635452b3B97A80cbADa0F8983131deAF1ef6f";
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+
+        const bulkMintFactory = new ethers.Contract(
+          contractAddress,
+          contractABI,
+          signer
+        );
+
+        console.log("metaDataIPFSHash", metaDataIPFSHash);
+        console.log("contractABI", contractABI);
+
+        const minting = await bulkMintFactory.bulkMint(
+          eventName,
+          numTickets,
+          metaDataIPFSHash
+        );
+
+        console.log("Mining...", minting.hash);
+
+        await minting.wait();
+        console.log("Mined -- ", minting.hash);
+      } else {
+        console.log("Ethereum object doesn't exist!");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   async function createNFTs() {
     const serverUrl = "https://ajly5xpy5zyk.usemoralis.com:2053/server";
@@ -24,12 +74,14 @@ function EventCreateModal() {
     console.log("location", location);
     console.log("dateTime", dateTime);
     console.log("numTickets", numTickets);
+    // console.log("ticketPrice", ticketPrice);
 
     // encode the file using the FileReader API
 
     const reader = new FileReader();
     let base64String;
     let moralisFile;
+    let metaDataIPFSHash;
 
     // Upload the NFT image to IPFS
     reader.onloadend = async () => {
@@ -39,7 +91,7 @@ function EventCreateModal() {
       let options = {
         abi: [
           {
-            path: "",
+            path: "images.png",
             content: base64String,
           },
         ],
@@ -50,23 +102,25 @@ function EventCreateModal() {
       console.log("image path", path);
 
       const content = {
-        image: path,
+        image: path[0].path,
         name: eventName,
-        description: location + "_" + dateTime,
+        description: `This event is hosted at ${location}, at date/time ${dateTime}.\nThere's only ${numTickets} total, buy yours soon!`,
       };
 
       options = {
         abi: [
           {
-            path: "",
+            path: "metadata.json",
             content: content,
           },
         ],
       };
 
-      let path = await Moralis.Web3API.storage.uploadFolder(options);
+      metaDataIPFSHash = await Moralis.Web3API.storage.uploadFolder(options);
 
-      console.log("metadata", path);
+      console.log("metadata", metaDataIPFSHash);
+
+      await mint(metaDataIPFSHash[0].path);
     };
     reader.readAsDataURL(selectedFile);
   }
@@ -167,6 +221,23 @@ function EventCreateModal() {
             onChange={(e) => setNumTickets(e.target.value)}
           />
         </div>
+
+        {/* <div className="mb-3 w-96">
+          <label
+            className="text-sm font-medium text-gray-400 mb-5"
+            for="Ticket Price"
+          >
+            Ticket Price ($USD)
+          </label>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 mt-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="ticketPrice"
+            type="number"
+            placeholder="20"
+            value={ticketPrice}
+            onChange={(e) => setTicketPrice(e.target.value)}
+          />
+        </div> */}
 
         <div className="hidden sm:block">
           <button
