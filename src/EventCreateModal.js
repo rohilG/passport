@@ -3,6 +3,7 @@ import React from "react";
 import { useState, useContext } from "react";
 import DateTimePicker from "react-datetime-picker";
 import { useMoralis } from "react-moralis";
+import { Audio } from "react-loader-spinner";
 import { sequence } from "0xsequence";
 import { ETHAuth } from "@0xsequence/ethauth";
 import { ethers } from "ethers";
@@ -19,6 +20,7 @@ function EventCreateModal() {
   const [dateTime, setDateTime] = useState(new Date());
   const [numTickets, setNumTickets] = useState("");
   const [eventQR, setEventQR] = useState("");
+  const [waitForMint, setWaitForMint] = useState(false);
   const account = useContext(AccountContext);
   // const [ticketPrice, setTicketPrice] = useState(0);
 
@@ -134,7 +136,9 @@ function EventCreateModal() {
 
       console.log("metadata", metaDataIPFSHash);
 
+      setWaitForMint(true);
       await mint(metaDataIPFSHash[0].path);
+      setWaitForMint(false);
     };
     reader.readAsDataURL(selectedFile);
   }
@@ -261,6 +265,11 @@ function EventCreateModal() {
             Create Event
           </button>
         </div>
+        {waitForMint && (
+          <div className="flex justify-left py-5">
+            <Audio color="blue" height={80} width={80} />
+          </div>
+        )}
         <div className="flex justify-left py-5">
           {eventQR && <QRCode value={eventQR} />}
         </div>
