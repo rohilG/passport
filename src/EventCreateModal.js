@@ -113,6 +113,7 @@ function EventCreateModal() {
         ],
       };
 
+      setWaitForMint(true);
       let path = await Moralis.Web3API.storage.uploadFolder(options);
 
       console.log("image path", path);
@@ -136,7 +137,6 @@ function EventCreateModal() {
 
       console.log("metadata", metaDataIPFSHash);
 
-      setWaitForMint(true);
       await mint(metaDataIPFSHash[0].path);
       setWaitForMint(false);
     };
